@@ -25,6 +25,7 @@ import javax.inject.Inject;
 import static com.example.alimu.flickrapp.util.UtilityClass.clearAlertDialog;
 import static com.example.alimu.flickrapp.util.UtilityClass.createAlertDialog;
 import static com.example.alimu.flickrapp.util.UtilityClass.sharedVariables.imageUrlList;
+import static com.example.alimu.flickrapp.util.UtilityClass.sharedVariables.isPageLoaded;
 import static com.example.alimu.flickrapp.util.UtilityClass.sharedVariables.pageNumber;
 
 public class MainFragment extends Fragment implements MainContract.View, RecyclerAdapter.ItemClickListener {
@@ -115,7 +116,10 @@ public class MainFragment extends Fragment implements MainContract.View, Recycle
     protected void initiateLoading(){
         int defaultPageNumber = Integer.parseInt(context.getString(R.string.start_page_name));
 
-        if(pageNumber == defaultPageNumber) {
+        Log.i(LOG_TAG, "isPageLoaded - "+ isPageLoaded);
+
+        if(pageNumber == defaultPageNumber && !isPageLoaded) {
+            isPageLoaded = true;
             Log.i(LOG_TAG, "pageNumber - "+ pageNumber);
             checkForConnection(String.valueOf(pageNumber));
         }

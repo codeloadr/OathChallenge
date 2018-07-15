@@ -70,7 +70,7 @@ public class UtilityClass {
         public static final int RECYCLER_VIEW_COLUMNS_COUNT = 3;
         public static int pageNumber = 1;
         public static int pagesCount;
-
+        public static boolean isPageLoaded = false;
         public static List<String> imageUrlList = new ArrayList<>();
     }
 }
