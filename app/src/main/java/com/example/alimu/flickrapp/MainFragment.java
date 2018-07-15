@@ -23,6 +23,8 @@ import javax.inject.Inject;
 
 import static com.example.alimu.flickrapp.util.UtilityClass.clearAlertDialog;
 import static com.example.alimu.flickrapp.util.UtilityClass.createAlertDialog;
+import static com.example.alimu.flickrapp.util.UtilityClass.sharedVariables.imageUrlList;
+import static com.example.alimu.flickrapp.util.UtilityClass.sharedVariables.pageNumber;
 
 public class MainFragment extends Fragment implements MainContract.View, RecyclerAdapter.ItemClickListener {
     private RecyclerView mRecyclerView;
@@ -92,15 +94,25 @@ public class MainFragment extends Fragment implements MainContract.View, Recycle
     public void createAnimation(View view){
         animationView = view.findViewById(R.id.animation_view);
         animationView.setAnimation(R.raw.preloader);
+
+        animationView.setVisibility(View.VISIBLE);
+        animationView.playAnimation();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        String defaultPageNumber = context.getString(R.string.start_page_name);
-        checkForConnection(defaultPageNumber);
-        MainPresenter.pageNumber = Integer.parseInt(defaultPageNumber);
+        initiateLoading();
+    }
+
+    protected void initiateLoading(){
+        int defaultPageNumber = Integer.parseInt(context.getString(R.string.start_page_name));
+
+        if(pageNumber == defaultPageNumber) {
+            Log.i(LOG_TAG, "pageNumber - "+ pageNumber);
+            checkForConnection(String.valueOf(pageNumber));
+        }
     }
 
     public void checkForConnection(String pageNumber) {
@@ -116,12 +128,6 @@ public class MainFragment extends Fragment implements MainContract.View, Recycle
 
     protected void prepareAPICall(String pageNumber){
         Log.i(LOG_TAG, "prepareAPICall");
-
-        mAdapterRecycler.clearAdapterData();
-        mAdapterRecycler.notifyDataSetChanged();
-
-        animationView.setVisibility(View.VISIBLE);
-        animationView.playAnimation();
 
         mainPresenter.requestAPICall(pageNumber);
     }
@@ -145,7 +151,6 @@ public class MainFragment extends Fragment implements MainContract.View, Recycle
     @Override
     public void onPause(){
         super.onPause();
-        clearResources();
     }
 
     @Override
@@ -159,11 +164,14 @@ public class MainFragment extends Fragment implements MainContract.View, Recycle
     @Override
     public void onStop() {
         super.onStop();
+
+        Log.i(LOG_TAG, "onStop called");
     }
 
     public void clearResources(){
         Log.i(LOG_TAG, "MainFragment clearResources");
 
+        imageUrlList.clear();
         clearAlertDialog();
     }
 }

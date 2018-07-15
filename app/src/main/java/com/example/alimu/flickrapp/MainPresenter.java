@@ -10,17 +10,17 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
-import java.util.ArrayList;
+import com.example.alimu.flickrapp.util.UtilityClass;
 import java.util.LinkedHashMap;
 import java.util.List;
+import static com.example.alimu.flickrapp.util.UtilityClass.sharedVariables.pageNumber;
+import static com.example.alimu.flickrapp.util.UtilityClass.sharedVariables.pagesCount;
+import static com.example.alimu.flickrapp.util.UtilityClass.sharedVariables.imageUrlList;
 
 public class MainPresenter extends MainContract.Presenter {
     private MainContract.View view;
     private RequestQueue requestQueue;
     private static Context context;
-    public static int pageNumber, pagesCount;
-
     private String LOG_TAG = MainPresenter.class.getSimpleName();
 
     @Override
@@ -104,12 +104,8 @@ public class MainPresenter extends MainContract.Presenter {
     }
 
     protected void generatePhotoURLs(List<LinkedHashMap<String, String>> responseList){
-        //https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg
-        List<String> imageUrlList = new ArrayList<>();
-        int i = 0;
         for (LinkedHashMap<String, String> entry : responseList) {
-            //TODO For testing 10 items
-            if(i == 10) break;
+
             StringBuilder url = new StringBuilder();
             url.append("https://farm")
                 .append(entry.get("farm"))
@@ -121,16 +117,14 @@ public class MainPresenter extends MainContract.Presenter {
                 .append(entry.get("secret"))
                 .append(".jpg");
             imageUrlList.add(url.toString());
-
-            i++;
         }
 
         Log.i(LOG_TAG, "imageUrlList - " + imageUrlList);
         view.updateRecyclerView(imageUrlList);
     }
 
-    protected void updatePageInfo(String pageNumber, String pages){
-        MainPresenter.pageNumber = Integer.parseInt(pageNumber);
-        MainPresenter.pagesCount = Integer.parseInt(pages);
+    protected void updatePageInfo(String page, String pages){
+        pageNumber = Integer.parseInt(page);
+        pagesCount = Integer.parseInt(pages);
     }
 }

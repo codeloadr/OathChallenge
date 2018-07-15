@@ -16,6 +16,8 @@ import com.example.alimu.flickrapp.util.UtilityClass;
 import java.util.List;
 
 import static com.example.alimu.flickrapp.util.UtilityClass.createAlertDialog;
+import static com.example.alimu.flickrapp.util.UtilityClass.sharedVariables.pageNumber;
+import static com.example.alimu.flickrapp.util.UtilityClass.sharedVariables.pagesCount;
 
 class VIEW_TYPES {
     public static final int Header = 1;
@@ -64,7 +66,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         if(isEndOfList(position)) {
-            if(MainPresenter.pageNumber == MainPresenter.pagesCount) {
+            if(pageNumber == pagesCount) {
                 holder.button.setVisibility(View.INVISIBLE);
             } else {
                 holder.button.setVisibility(View.VISIBLE);
@@ -101,7 +103,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 holder.button.setVisibility(View.INVISIBLE);
 
                 if (itemClickListener != null) {
-                    itemClickListener.onButtonClicked(view, ++MainPresenter.pageNumber);
+                    itemClickListener.onButtonClicked(view, ++pageNumber);
                 }
             }
         });

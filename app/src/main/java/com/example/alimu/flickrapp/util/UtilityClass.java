@@ -10,6 +10,9 @@ import android.provider.Settings;
 
 import com.example.alimu.flickrapp.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UtilityClass {
     static AlertDialog.Builder mAlertDialogBuilder;
     static AlertDialog mAlertDialog;
@@ -65,5 +68,9 @@ public class UtilityClass {
 
     public static class sharedVariables {
         public static final int RECYCLER_VIEW_COLUMNS_COUNT = 3;
+        public static int pageNumber = 1;
+        public static int pagesCount;
+
+        public static List<String> imageUrlList = new ArrayList<>();
     }
 }
