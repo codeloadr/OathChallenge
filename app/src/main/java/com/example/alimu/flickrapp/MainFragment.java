@@ -3,6 +3,7 @@ package com.example.alimu.flickrapp;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
@@ -61,10 +62,10 @@ public class MainFragment extends Fragment implements MainContract.View, Recycle
 
         //mRecyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.HORIZONTAL));
         //mRecyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
-        RecyclerView.ItemDecoration dividerItemDecoration = new DividerItemDecorator(ContextCompat.getDrawable(context, R.drawable.divider));
+        /*RecyclerView.ItemDecoration dividerItemDecoration = new DividerItemDecorator(ContextCompat.getDrawable(context, R.drawable.divider));
         mRecyclerView.addItemDecoration(dividerItemDecoration);
         mRecyclerView.addItemDecoration(dividerItemDecoration);
-
+        */
         mRecyclerView.setLayoutManager(new GridLayoutManager(context, UtilityClass.sharedVariables.RECYCLER_VIEW_COLUMNS_COUNT));
         mAdapterRecycler = new RecyclerAdapter(context);
         mAdapterRecycler.setClickListener(this);
