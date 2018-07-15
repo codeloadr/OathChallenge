@@ -14,8 +14,7 @@ public interface MainContract {
 
     abstract class Presenter extends AbstractPresenter<View> {
         abstract void setContext(Context context);
-        abstract Context getContext();
-        abstract void requestAPICall();
+        abstract void requestAPICall(String pageName);
         abstract void setView(MainContract.View view);
     }
 }

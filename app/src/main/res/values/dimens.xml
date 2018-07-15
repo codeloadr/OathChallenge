@@ -14,5 +14,5 @@
     <dimen name="row_left_margin">20dp</dimen>
     <dimen name="row_right_margin">20dp</dimen>
     <dimen name="row_gap_margin">18dp</dimen>
-    <dimen name="fab_margin">50dp</dimen>
+    <dimen name="button_margin">50dp</dimen>
 </resources>

@@ -14,12 +14,12 @@ import com.android.volley.toolbox.Volley;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MainPresenter extends MainContract.Presenter {
-    private static Context context;
     private MainContract.View view;
     private RequestQueue requestQueue;
+    private static Context context;
+    public static int pageNumber, pagesCount;
 
     private String LOG_TAG = MainPresenter.class.getSimpleName();
 
@@ -42,13 +42,8 @@ public class MainPresenter extends MainContract.Presenter {
     }
 
     @Override
-    Context getContext() {
-        return context;
-    }
-
-    @Override
-    void requestAPICall() {
-        String API_URL = generateURL(context.getString(R.string.start_page_name));
+    void requestAPICall(String pageNumber) {
+        String API_URL = generateURL(pageNumber);
 
         //Creating a request queue
         requestQueue = Volley.newRequestQueue(context);
@@ -65,15 +60,15 @@ public class MainPresenter extends MainContract.Presenter {
         requestQueue.add(stringRequest);
     }
 
-    protected String generateURL(String pageName){
+    protected String generateURL(String pageNumber){
         StringBuilder url = new StringBuilder();
 
-        url.append(context.getString(R.string.base_url));
-        url.append("&api_key=");
-        url.append(context.getString(R.string.api_key));
-        url.append("&page=");
-        url.append(pageName);
-        url.append("&format=json&nojsoncallback=1");
+        url.append(context.getString(R.string.base_url))
+            .append("&api_key=")
+            .append(context.getString(R.string.api_key))
+            .append("&page=")
+            .append(pageNumber)
+            .append("&format=json&nojsoncallback=1");
 
         return url.toString();
     }
@@ -94,6 +89,7 @@ public class MainPresenter extends MainContract.Presenter {
                         Log.i(LOG_TAG, "responseList - " + responseList);
 
                         generatePhotoURLs(responseList);
+                        updatePageInfo(pageInfoMap.get("page"), pageInfoMap.get("pages"));
                     }
                 },
                 new Response.ErrorListener() {
@@ -110,8 +106,10 @@ public class MainPresenter extends MainContract.Presenter {
     protected void generatePhotoURLs(List<LinkedHashMap<String, String>> responseList){
         //https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg
         List<String> imageUrlList = new ArrayList<>();
-
+        int i = 0;
         for (LinkedHashMap<String, String> entry : responseList) {
+            //TODO For testing 10 items
+            if(i == 10) break;
             StringBuilder url = new StringBuilder();
             url.append("https://farm")
                 .append(entry.get("farm"))
@@ -123,9 +121,16 @@ public class MainPresenter extends MainContract.Presenter {
                 .append(entry.get("secret"))
                 .append(".jpg");
             imageUrlList.add(url.toString());
+
+            i++;
         }
 
         Log.i(LOG_TAG, "imageUrlList - " + imageUrlList);
         view.updateRecyclerView(imageUrlList);
+    }
+
+    protected void updatePageInfo(String pageNumber, String pages){
+        MainPresenter.pageNumber = Integer.parseInt(pageNumber);
+        MainPresenter.pagesCount = Integer.parseInt(pages);
     }
 }

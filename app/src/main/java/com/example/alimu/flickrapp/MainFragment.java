@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.alimu.flickrapp.config.DaggerServiceComponent;
@@ -29,7 +28,6 @@ public class MainFragment extends Fragment implements MainContract.View, Recycle
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerAdapter mAdapterRecycler;
-    private Button mloadMoreButton;
     private Context context;
     private LottieAnimationView animationView;
 
@@ -64,7 +62,7 @@ public class MainFragment extends Fragment implements MainContract.View, Recycle
     }
 
     @Override
-    public void onItemClick(View view, int position) {
+    public void onItemClicked(View view, int position) {
         String imageUrl = mAdapterRecycler.getItem(position);
         Log.i(LOG_TAG, "You clicked " + imageUrl + ", which is at cell position " + position);
         Intent intent = new Intent(context, ImageDisplayActivity.class);
@@ -72,14 +70,10 @@ public class MainFragment extends Fragment implements MainContract.View, Recycle
         context.startActivity(intent);
     }
 
-    protected void initLoadMoreButton(View view){
-        mloadMoreButton = view.findViewById(R.id.loadMoreButton);
-        mloadMoreButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checkForConnection();
-            }
-        });
+    @Override
+    public void onButtonClicked(View view, int pageNumber){
+        Log.i(LOG_TAG, "onButtonClicked started");
+        checkForConnection(String.valueOf(pageNumber));
     }
 
     @Override
@@ -87,7 +81,6 @@ public class MainFragment extends Fragment implements MainContract.View, Recycle
         Log.i(LOG_TAG, "MainFragment onViewCreated");
 
         initRecyclerView(view);
-        initLoadMoreButton(view);
 
         mainPresenter.attachView(this);
         mainPresenter.setView(this);
@@ -104,13 +97,16 @@ public class MainFragment extends Fragment implements MainContract.View, Recycle
     @Override
     public void onResume() {
         super.onResume();
-        checkForConnection();
+
+        String defaultPageNumber = context.getString(R.string.start_page_name);
+        checkForConnection(defaultPageNumber);
+        MainPresenter.pageNumber = Integer.parseInt(defaultPageNumber);
     }
 
-    public void checkForConnection() {
+    public void checkForConnection(String pageNumber) {
         if (UtilityClass.checkNetworkConnectivity(context)) {
             Log.i(LOG_TAG, "Internet Connection Available");
-            prepareAPICall();
+            prepareAPICall(pageNumber);
         }
         else{
             Log.i(LOG_TAG, "MainFragment offline");
@@ -118,9 +114,8 @@ public class MainFragment extends Fragment implements MainContract.View, Recycle
         }
     }
 
-    protected void prepareAPICall(){
+    protected void prepareAPICall(String pageNumber){
         Log.i(LOG_TAG, "prepareAPICall");
-        mloadMoreButton.setVisibility(View.INVISIBLE);
 
         mAdapterRecycler.clearAdapterData();
         mAdapterRecycler.notifyDataSetChanged();
@@ -128,7 +123,7 @@ public class MainFragment extends Fragment implements MainContract.View, Recycle
         animationView.setVisibility(View.VISIBLE);
         animationView.playAnimation();
 
-        mainPresenter.requestAPICall();
+        mainPresenter.requestAPICall(pageNumber);
     }
 
     @Override
@@ -145,7 +140,6 @@ public class MainFragment extends Fragment implements MainContract.View, Recycle
 
         mAdapterRecycler.setAdapterData(imageUrlList);
         mAdapterRecycler.notifyDataSetChanged();
-        mloadMoreButton.setVisibility(View.VISIBLE);
     }
 
     @Override
