@@ -4,8 +4,9 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,7 +29,6 @@ import static com.example.alimu.flickrapp.util.UtilityClass.sharedVariables.page
 
 public class MainFragment extends Fragment implements MainContract.View, RecyclerAdapter.ItemClickListener {
     private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerAdapter mAdapterRecycler;
     private Context context;
     private LottieAnimationView animationView;
@@ -56,7 +56,13 @@ public class MainFragment extends Fragment implements MainContract.View, Recycle
     protected void initRecyclerView(View view){
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(context);
+
+        //mRecyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.HORIZONTAL));
+        //mRecyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
+        RecyclerView.ItemDecoration dividerItemDecoration = new DividerItemDecorator(ContextCompat.getDrawable(context, R.drawable.divider));
+        mRecyclerView.addItemDecoration(dividerItemDecoration);
+        mRecyclerView.addItemDecoration(dividerItemDecoration);
+
         mRecyclerView.setLayoutManager(new GridLayoutManager(context, UtilityClass.sharedVariables.RECYCLER_VIEW_COLUMNS_COUNT));
         mAdapterRecycler = new RecyclerAdapter(context);
         mAdapterRecycler.setClickListener(this);
