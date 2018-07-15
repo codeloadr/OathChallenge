@@ -71,6 +71,7 @@ public class UtilityClass {
         public static int pageNumber = 1;
         public static int pagesCount;
         public static boolean isPageLoaded = false;
+        public static boolean isInternetRequested = false;
         public static List<String> imageUrlList = new ArrayList<>();
     }
 }
